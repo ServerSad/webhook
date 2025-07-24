@@ -1,35 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>ServerSadzz WebHook</title>
-    <link rel="stylesheet" href="stylesheet.css">
-    <script src="jquery.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ServerSadzz Webhooker</title>
+  <link rel="stylesheet" href="stylesheet.css">
+  <script src="jquery.js"></script>
+  <script src="main.js" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">ServerSadzz WebHook</h1>
+  <div class="container">
+    <header>
+      <img id="logo" src="https://via.placeholder.com/150" alt="Logo" class="logo">
+      <h1>ServerSadzz Webhooker</h1>
+    </header>
 
-        <input type="text" id="webhookUrl" placeholder="Webhook URL"><br>
-        <input type="text" id="username" placeholder="Nome de exibição"><br>
-        <input type="text" id="avatarUrl" placeholder="URL do avatar (opcional)"><br>
-        <textarea id="message" placeholder="Mensagem..."></textarea><br>
+    <section id="webhook-section">
+      <div class="webhook-input">
+        <input type="text" id="webhook-url" placeholder="Digite o Webhook">
+        <button id="add-webhook">➕</button>
+      </div>
+      <div id="webhook-list"></div>
+    </section>
 
-        <div class="options">
-            <label>
-                <input type="checkbox" id="spamToggle"> Ativar Spam
-            </label><br>
+    <section class="message-section">
+      <textarea id="message" placeholder="Digite sua mensagem"></textarea>
+      <button id="send">Enviar</button>
+    </section>
+  </div>
 
-            <label>
-                Delay (ms): <input type="number" id="delayInput" value="1000" min="0">
-            </label>
-            <label>
-                <input type="checkbox" id="useDelayToggle"> Usar delay customizado no spam
-            </label><br>
-        </div>
-
-        <button id="send">Enviar</button>
-    </div>
-
-    <script src="main.js"></script>
+  <div id="toast" class="toast hidden"></div>
 </body>
 </html>
