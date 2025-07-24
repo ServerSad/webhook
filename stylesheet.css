@@ -1,89 +1,36 @@
-body {
-  font-family: sans-serif;
-  background: #1e1e2f;
-  color: #fff;
+/* Reset e base */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.container {
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
+body {
+  background: #0a0a0a;
+  color: #f0f0f0;
+  padding: 1rem;
 }
 
-.logo {
-  width: 100px;
-  display: block;
-  margin: 0 auto 10px;
-}
-
-h1 {
+header {
   text-align: center;
-  font-size: 2em;
+  margin-bottom: 1rem;
+  color: #a050ff;
 }
 
-.webhook-input {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.webhook-input input {
-  flex: 1;
-  padding: 8px;
-  border-radius: 4px;
+input,
+textarea,
+button {
   border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin: 0.25rem;
 }
 
-.webhook-input button {
-  padding: 8px 12px;
-}
-
-.webhook-entry {
-  background: #2d2d40;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.message-section textarea {
+input[type="text"],
+textarea {
   width: 100%;
-  padding: 10px;
-  margin-top: 20px;
-  height: 100px;
-  border-radius: 5px;
-  border: none;
-  resize: none;
-}
-
-.message-section button {
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-  border: none;
-  background: #4b8bfd;
-  color: white;
-  border-radius: 5px;
-  font-size: 1em;
-}
-
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
-}
-
-.toast.hidden {
-  display: none;
+  background: #222;
+  color: #fff;
 }
