@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ServerSadzz WebHook</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="jquery.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">ServerSadzz WebHook</h1>
+
+        <input type="text" id="webhookUrl" placeholder="Webhook URL"><br>
+        <textarea id="message" placeholder="Mensagem..."></textarea><br>
+
+        <div class="options">
+            <label>
+                <input type="checkbox" id="spamToggle"> Ativar Spam
+            </label><br>
+
+            <label>
+                Delay (ms): <input type="number" id="delayInput" value="1000" min="0">
+            </label>
+            <label>
+                <input type="checkbox" id="useDelayToggle"> Usar delay customizado no spam
+            </label><br>
+        </div>
+
+        <button id="send">Enviar</button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
