@@ -1,92 +1,128 @@
-let webhookList = JSON.parse(localStorage.getItem("webhooks")) || [];
+// Utilidades
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 3000);
+}
 
 function saveWebhooks() {
-  localStorage.setItem("webhooks", JSON.stringify(webhookList));
+  localStorage.setItem('webhooks', JSON.stringify(webhooks));
 }
 
-function showToast(msg) {
-  const toast = document.getElementById("toast");
-  toast.textContent = msg;
-  toast.classList.remove("hidden");
-  setTimeout(() => toast.classList.add("hidden"), 2000);
+function loadWebhooks() {
+  const saved = localStorage.getItem('webhooks');
+  return saved ? JSON.parse(saved) : [];
 }
 
-function renderWebhooks() {
-  const container = document.getElementById("webhook-list");
-  container.innerHTML = "";
-  webhookList.forEach((webhook, index) => {
-    const div = document.createElement("div");
-    div.className = "webhook-entry";
+function createWebhookElement(webhook, index) {
+  const container = document.createElement('div');
+  container.className = 'webhook-item';
 
-    div.innerHTML = `
-      <input type="checkbox" ${webhook.enabled ? "checked" : ""} onchange="toggleWebhook(${index})">
-      <span>${webhook.name}</span>
-      <button onclick="editWebhook(${index})"><i data-lucide="pencil"></i></button>
-      <label>Spam<input type="checkbox" ${webhook.spam ? "checked" : ""} onchange="toggleSpam(${index})"></label>
-    `;
+  const name = document.createElement('span');
+  name.textContent = webhook.name || `Webhook ${index + 1}`;
 
-    container.appendChild(div);
+  const toggle = document.createElement('input');
+  toggle.type = 'checkbox';
+  toggle.checked = webhook.active;
+  toggle.title = 'Ativar/Desativar';
+  toggle.addEventListener('change', () => {
+    webhook.active = toggle.checked;
+    saveWebhooks();
   });
 
-  lucide.createIcons();
+  const spamToggle = document.createElement('input');
+  spamToggle.type = 'checkbox';
+  spamToggle.checked = webhook.spam;
+  spamToggle.title = 'Spam';
+  spamToggle.addEventListener('change', () => {
+    webhook.spam = spamToggle.checked;
+    saveWebhooks();
+  });
+
+  const edit = document.createElement('button');
+  edit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="icon-pencil" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M16.732 3.732a2.5 2.5 0 013.536 3.536l-11 11H6v-3.268l10.732-10.732z" /></svg>';
+  edit.title = 'Editar';
+  edit.addEventListener('click', () => {
+    const newName = prompt('Novo nome:', webhook.name);
+    const newAvatar = prompt('Novo avatar URL:', webhook.avatar_url);
+    if (newName !== null) webhook.name = newName;
+    if (newAvatar !== null) webhook.avatar_url = newAvatar;
+    saveWebhooks();
+    renderWebhookList();
+  });
+
+  const remove = document.createElement('button');
+  remove.textContent = '🗑';
+  remove.title = 'Remover';
+  remove.addEventListener('click', () => {
+    webhooks.splice(index, 1);
+    saveWebhooks();
+    renderWebhookList();
+  });
+
+  container.append(name, toggle, spamToggle, edit, remove);
+  return container;
 }
 
-function toggleWebhook(index) {
-  webhookList[index].enabled = !webhookList[index].enabled;
-  saveWebhooks();
+function renderWebhookList() {
+  const list = document.getElementById('webhookList');
+  list.innerHTML = '';
+  webhooks.forEach((webhook, i) => {
+    list.appendChild(createWebhookElement(webhook, i));
+  });
 }
 
-function toggleSpam(index) {
-  webhookList[index].spam = !webhookList[index].spam;
-  saveWebhooks();
-}
+// Variáveis globais
+let webhooks = loadWebhooks();
 
-function editWebhook(index) {
-  const newName = prompt("Nome do Webhook:", webhookList[index].name);
-  const avatar = prompt("Avatar URL:", webhookList[index].avatar);
-  if (newName) webhookList[index].name = newName;
-  if (avatar) webhookList[index].avatar = avatar;
-  saveWebhooks();
-  renderWebhooks();
-}
+// Eventos
+$(document).ready(function () {
+  renderWebhookList();
 
-document.getElementById("add-webhook").onclick = () => {
-  const url = document.getElementById("webhook-url").value.trim();
-  if (!url) return showToast("URL inválida.");
-  webhookList.push({ url, name: "Novo Webhook", avatar: "", enabled: true, spam: false });
-  document.getElementById("webhook-url").value = "";
-  saveWebhooks();
-  renderWebhooks();
-};
+  $('#addWebhook').click(() => {
+    const url = $('#webhookInput').val();
+    if (!url) return showToast('Insira uma URL de webhook');
+    webhooks.push({ url, active: true, spam: false, name: '', avatar_url: '' });
+    saveWebhooks();
+    renderWebhookList();
+    $('#webhookInput').val('');
+  });
 
-document.getElementById("send").onclick = async () => {
-  const msg = document.getElementById("message").value.trim();
-  if (!msg) return showToast("Digite uma mensagem.");
-  const targets = webhookList.filter(w => w.enabled);
-  if (targets.length === 0) return showToast("Nenhum webhook ativado.");
+  $('#sendMessage').click(() => {
+    const message = $('#message').val();
+    const username = $('#username').val();
+    const avatar = $('#avatar').val();
+    const file = document.getElementById('fileInput').files[0];
 
-  for (const hook of targets) {
-    const payload = {
-      content: msg,
-      username: hook.name || "Bot",
-      avatar_url: hook.avatar || undefined
-    };
+    if (!message && !file) return showToast('Mensagem ou arquivo obrigatórios');
 
-    let repeat = hook.spam ? 5 : 1;
-    for (let i = 0; i < repeat; i++) {
-      try {
-        await fetch(hook.url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        showToast("Erro ao enviar para " + hook.name);
-      }
-    }
-  }
+    webhooks.forEach((hook) => {
+      if (!hook.active) return;
 
-  showToast("Enviado com sucesso!");
-};
+      const sendPayload = () => {
+        const form = new FormData();
+        form.append('content', message);
+        if (username || hook.name) form.append('username', hook.name || username);
+        if (avatar || hook.avatar_url) form.append('avatar_url', hook.avatar_url || avatar);
+        if (file) form.append('file', file);
 
-renderWebhooks();
+        fetch(hook.url, { method: 'POST', body: form }).catch(() => showToast('Erro ao enviar para ' + (hook.name || 'Webhook')));
+      };
+
+      sendPayload();
+      if (hook.spam) for (let i = 0; i < 4; i++) setTimeout(sendPayload, 500 * (i + 1));
+    });
+
+    showToast('Mensagem enviada!');
+  });
+
+  // Foto de perfil preview
+  $('#profilePicInput').change(function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => $('#photoPreview').attr('src', e.target.result);
+    reader.readAsDataURL(file);
+  });
+});
