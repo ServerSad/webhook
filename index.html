@@ -1,35 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html><html lang="pt-BR"><head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ServerSadzz Webhooker</title>
   <link rel="stylesheet" href="stylesheet.css">
   <script src="jquery.js"></script>
-  <script src="main.js" defer></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <img id="logo" src="https://via.placeholder.com/150" alt="Logo" class="logo">
-      <h1>ServerSadzz Webhooker</h1>
-    </header>
+</head><body>
+  <header>
+    <h1>ServerSadzz Webhooker</h1>
+  </header>  <main>
+    <section class="profile-pic">
+      <img id="photoPreview" src="default.jpg" alt="Sua imagem" />
+      <input type="file" id="profilePicInput" accept="image/*" />
+    </section><section class="webhook-controls">
+  <input type="text" id="webhookInput" placeholder="Insira o Webhook...">
+  <button id="addWebhook">+</button>
+</section>
 
-    <section id="webhook-section">
-      <div class="webhook-input">
-        <input type="text" id="webhook-url" placeholder="Digite o Webhook">
-        <button id="add-webhook">➕</button>
-      </div>
-      <div id="webhook-list"></div>
-    </section>
+<section id="webhookList"></section>
 
-    <section class="message-section">
-      <textarea id="message" placeholder="Digite sua mensagem"></textarea>
-      <button id="send">Enviar</button>
-    </section>
-  </div>
+<section class="message-controls">
+  <textarea id="message" placeholder="Mensagem..."></textarea>
+  <input type="text" id="username" placeholder="Nome do usuário">
+  <input type="text" id="avatar" placeholder="URL do Avatar">
+  <input type="file" id="fileInput">
+  <button id="sendMessage">Enviar</button>
+</section>
 
-  <div id="toast" class="toast hidden"></div>
-</body>
-</html>
+  </main>  <div id="toast" class="hidden"></div>  <script src="main.js"></script></body></html>
