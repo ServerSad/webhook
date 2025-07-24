@@ -34,3 +34,30 @@ textarea {
   background: #222;
   color: #fff;
 }
+
+button {
+  background: #a050ff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #8124e1;
+}
+
+.webhook-controls,
+.message-controls {
+  margin-bottom: 1rem;
+}
+
+.webhook-item {
+  background: #1b1b1b;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
